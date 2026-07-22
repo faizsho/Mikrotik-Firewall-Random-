@@ -1,0 +1,11 @@
+/ip firewall mangle
+# Posisikan rule ini di urutan paling atas (di atas rule ICMP/Common)
+
+# Mark Connection untuk tujuan ke Speedtest (Upload trigger)
+add action=mark-connection chain=prerouting dst-address-list=speedtest new-connection-mark=Conn_Speedtest passthrough=yes connection-mark=no-mark comment="Bypass Speedtest"
+
+# Mark Connection untuk balasan dari Speedtest (Download trigger)
+add action=mark-connection chain=prerouting src-address-list=speedtest new-connection-mark=Conn_Speedtest passthrough=yes connection-mark=no-mark
+
+# Mark Packet untuk eksekusi ke Queue
+add action=mark-packet chain=prerouting connection-mark=Conn_Speedtest new-packet-mark=Pkt_Speedtest passthrough=no
